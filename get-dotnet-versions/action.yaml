@@ -1,0 +1,109 @@
+name: 'Generate dotnet version numbers'
+description: 'Generate dotnet project file compliant version numbers'
+
+inputs:
+  version:
+    description: 'The value containing the tag version.'
+    required: true
+
+outputs:
+
+  version-assembly:
+    description: 'The AssemblyVersion.'
+    value: ${{ steps.output-params.outputs.version-assembly }}
+
+  version-file:
+    description: 'The FileVersion.'
+    value: ${{ steps.output-params.outputs.version-file }}
+
+  version-informational:
+    description: 'The InformationalVersion.'
+    value: ${{ steps.output-params.outputs.version-informational }}   
+
+  version-package:
+    description: 'The PackageVersion.'
+    value: ${{ steps.output-params.outputs.version-package }}
+
+  version-build:
+    description: 'The build number.'
+    value: ${{ steps.output-params.outputs.buildnumber }}
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Input parameters
+      shell: bash
+      run: | 
+        echo "::notice::Input version = [${{ inputs.version }}]"
+
+    - name: Trim possible 'v' prefix from version
+      uses: mad9000/actions-find-and-replace-string@2
+      id: trimmedversion
+      with:
+        source: ${{ inputs.version }}
+        find: 'v'
+        replace: ''
+
+    - name: Split to get version parts
+      uses: rishabhgupta/split-by@v1
+      id: splitter
+      with:
+        string: '${{ steps.trimmedversion.outputs.value }}'
+        split-by: '.'
+
+    - name: ECHO splitter output
+      shell: bash
+      run: | 
+        echo "VERSION_MAJOR=${{ steps.splitter.outputs._0}}" >> $GITHUB_ENV
+        echo "VERSION_MINOR=${{ steps.splitter.outputs._1}}" >> $GITHUB_ENV
+        echo 2="${{ steps.splitter.outputs._2}}"        
+        echo "VERSION_BUILD=${{ steps.splitter.outputs._3}}" >> $GITHUB_ENV
+
+    - name: Extract optional pre-release tag
+      uses: rishabhgupta/split-by@v1
+      id: prereleasesplitter
+      with:
+        string: '${{ steps.splitter.outputs._2}}'
+        split-by: '-'
+
+    - name: ECHO prereleasesplitter output
+      shell: bash
+      run: | 
+        echo "VERSION_PATCH=${{ steps.prereleasesplitter.outputs._0}}" >> $GITHUB_ENV
+        echo "VERSION_PRE_RELEASE=${{ steps.prereleasesplitter.outputs._1}}" >> $GITHUB_ENV           
+
+    - name: Format commit id for versioning
+      uses: web3j/substr-action@v1.2
+      id: hash
+      with:
+        value: ${{github.sha}}
+        start: '0'
+        length: '8'
+
+    - name: Generate Build Number
+      shell: bash
+      id: buildnumber
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        HOURS=$(date +%k)
+        MINUTES=$(date +%-M) 
+        echo ::set-env name=VERSION_BUILD::$((HOURS * 60 + MINUTES))
+
+    - name: Set VERSION environmental variables
+      shell: bash
+      run: |
+        echo 'VERSION_ASSEMBLY=${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}' >> $GITHUB_ENV
+        echo 'VERSION_FILE=${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.${{ env.VERSION_PATCH }}.${{ env.VERSION_BUILD }}' >> $GITHUB_ENV
+        echo 'VERSION_INFORMATIONAL=${{steps.trimmedversion.outputs.value}}+${{steps.hash.outputs.result}}' >> $GITHUB_ENV
+        echo 'VERSION_PACKAGE=${{steps.trimmedversion.outputs.value}}' >> $GITHUB_ENV 
+
+    - name: Set output parameters
+      id: output-params
+      shell: bash
+      run: |
+        echo "::set-output name=version-assembly::$(echo $VERSION_ASSEMBLY)"
+        echo "::set-output name=version-file::$(echo $VERSION_FILE)"
+        echo "::set-output name=version-informational::$(echo $VERSION_INFORMATIONAL)"
+        echo "::set-output name=version-package::$(echo $VERSION_PACKAGE)"
+        echo "::set-output name=buildnumber::$(echo $VERSION_BUILD)"
