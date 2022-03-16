@@ -4,12 +4,14 @@
 
 ### Usage
 
-Add the following step to your job
+Add the following step to your job referencing the repository and action folder you want to use.
+
+Either use a *tag* (prefered) or *branch* name for the `{ref}`. This makes sure that changes do not potentially effect your build.
 
 ```yaml
 - name: Get version from tag
   id: dotnet-versions
-  uses: ./.github/actions/get-dotnet-versions
+  uses: martijnvanschie/github-actions/get-dotnet-versions@{ref}
   with: 
     version: '1.2.3-beta.1'
 ```
