@@ -13,4 +13,4 @@ This action generates the version attributes commonly used in dotnet project fil
 </PropertyGroup>
 ```
 
-[Get Dotnet Versions](get-dotnet-versions/README.md)
+[Get Dotnet Versions](get-dotnet-versions/)
