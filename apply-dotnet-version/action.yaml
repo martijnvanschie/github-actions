@@ -1,0 +1,68 @@
+name: 'Apply dotnet version numbers'
+description: 'Apply dotnet versions to project file'
+
+inputs:
+  version-assembly:
+    description: 'The AssemblyVersion.'
+    required: true
+
+  version-file:
+    description: 'The FileVersion.'
+    required: true
+
+  version-informational:
+    description: 'The InformationalVersion.'
+    required: true
+
+  version-package:
+    description: 'The PackageVersion.'
+    required: true
+
+  projectFile:
+    description: 'The dotnet project file to apply the versions to.'
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Input parameters
+      shell: bash
+      run: | 
+        echo "::notice::Input version-assembly = [${{ inputs.version-assembly }}]"
+        echo "::notice::Input version-file = [${{ inputs.version-file }}]"
+        echo "::notice::Input version-informational = [${{ inputs.version-informational }}]"
+        echo "::notice::Input version-package = [${{ inputs.version-package }}]"
+        echo "::notice::Input projectFile = [${{ inputs.projectFile }}]"
+
+    - name: xml-replace-action AssemblyVersion
+      uses: rvolo/xml-replace-action@v0.3
+      with:
+        filepath: '${{ inputs.projectFile }}'
+        xpath: '//Project/PropertyGroup/AssemblyVersion/text()'
+        replace: '${{ inputs.version-assembly }}' 
+
+    - name: xml-replace-action FileVersion
+      uses: rvolo/xml-replace-action@v0.3
+      with:
+        filepath: '${{ inputs.projectFile }}'
+        xpath: '//Project/PropertyGroup/FileVersion/text()'
+        replace: '${{ inputs.version-file }}' 
+
+    - name: xml-replace-action InformationalVersion
+      uses: rvolo/xml-replace-action@v0.3
+      with:
+        filepath: '${{ inputs.projectFile }}'
+        xpath: '//Project/PropertyGroup/InformationalVersion/text()'
+        replace: '${{ inputs.version-informational }}' 
+
+    - name: xml-replace-action PackageVersion
+      uses: rvolo/xml-replace-action@v0.3
+      with:
+        filepath: '${{ inputs.projectFile }}'
+        xpath: '//Project/PropertyGroup/PackageVersion/text()'
+        replace: '${{ inputs.version-package }}'  
+
+    - name: Print project file
+      shell: bash
+      run: |
+        cat '${{ inputs.projectFile }}'
