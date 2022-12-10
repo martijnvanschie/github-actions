@@ -4,9 +4,15 @@ const github = require('@actions/github');
 try {
   var baseVersion = core.getInput('version', {required: false}) || 'v1.0.0-beta.1';
   core.debug(`Input version: ${baseVersion}`);
+  core.log(`Input version: ${baseVersion}`);
+  core.info(`Input version: ${baseVersion}`);
+  core.warning(`Input version: ${baseVersion}`);
+  core.error(`Input version: ${baseVersion}`);
+
+  core.log(payload.ref);
 
   const test = process.env.GITHUB_SHA || "GITHUB_SHA::undefined";
-  core.debug(test);
+  core.log(test);
 
   baseVersion = baseVersion.replace(/^(v)/,"");
   core.debug(`Working version: ${baseVersion}`);
