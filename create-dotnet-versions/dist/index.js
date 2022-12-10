@@ -9688,20 +9688,28 @@ const core = __nccwpck_require__(9298);
 const github = __nccwpck_require__(5918);
 
 try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet', {required: false});
+  var baseVersion = core.getInput('version', {required: false}) || 'v1.0.0-beta.1';
+  core.debug(`Input version: ${baseVersion}`);
 
+  const test = process.env.GITHUB_SHA || "GITHUB_SHA::undefined";
+  core.debug(test);
 
-core.info("Hello from core");
+  baseVersion = baseVersion.replace(/^(v)/,"");
+  core.debug(`Working version: ${baseVersion}`);
 
-
-  console.log(`Hello ${nameToGreet}!`);
+  core.debug('Split versions on "."');
+  const words = baseVersion.split('.');
+  words.forEach(element => {
+    core.debug(element);
+  });
+  
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
-} catch (error) {
+}
+catch (error) {
   core.setFailed(error.message);
 }
 })();
