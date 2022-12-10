@@ -8,6 +8,10 @@ try {
   core.warning(`Input version: ${baseVersion}`);
   core.error(`Input version: ${baseVersion}`);
 
+  const payload = JSON.stringify(github.context.payload, undefined, 2)
+  console.log(`The event payload: ${payload}`);
+
+  core.info(github.context.payload.ref);
   core.info(payload.ref);
 
   const test = process.env.GITHUB_SHA || "GITHUB_SHA::undefined";
@@ -24,9 +28,6 @@ try {
   
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
 }
 catch (error) {
   core.setFailed(error.message);
