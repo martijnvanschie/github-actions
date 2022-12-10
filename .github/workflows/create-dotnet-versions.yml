@@ -1,3 +1,5 @@
+name: Verify Create Dotnet Version
+
 on: 
   workflow_dispatch:
 
