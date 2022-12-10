@@ -1,8 +1,11 @@
 name: Verify Create Dotnet Version
 
 on:
-  [push]
-  
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
   workflow_dispatch:
 
 jobs:
