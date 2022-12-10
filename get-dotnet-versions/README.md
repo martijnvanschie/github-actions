@@ -16,19 +16,19 @@ Example values are:
 
 ### `version-assembly`
 
-The version acording to the `AssemblyVersion` format.
+The version according to the `AssemblyVersion` format.
 
 ### `version-file`
 
-The version acording to the `FileVersion` format.
+The version according to the `FileVersion` format.
 
 ### `version-informational`
 
-The version acording to the `InformationalVersion` format.
+The version according to the `InformationalVersion` format.
 
 ### `version-package`
 
-The version acording to the `PackageVersion` format.
+The version according to the `PackageVersion` format.
 
 ### `version-build`
 
