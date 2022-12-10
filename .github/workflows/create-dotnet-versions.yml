@@ -1,6 +1,8 @@
 name: Verify Create Dotnet Version
 
-on: 
+on:
+  [push]
+  
   workflow_dispatch:
 
 jobs:
