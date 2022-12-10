@@ -1,13 +1,13 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Create dotnet versions'
+description: 'Create various dotnet assembly versions bases on the Semantic Versioning 2.0.0 standard'
 inputs:
-  version:
-    description: 'The version '
+  baseversion:
+    description: 'The base pattern used the create the additional versions'
     required: true
-    default: 'World'    
+    default: '1.0.0.0'
 outputs:
-  time:
-    description: 'The time we greeted you'
+  version-assembly:
+    description: 'The version-assembly'
 runs:
   using: 'node16'
   main: 'dist/index.js'
