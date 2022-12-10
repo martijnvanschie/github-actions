@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    
+
   workflow_dispatch:
 
 jobs:
@@ -19,6 +19,6 @@ jobs:
         id: create-version
         uses: ./create-dotnet-versions
         with:
-          version: 'v1.2.3.4'
+          version: 'v1.2.3-beta.4'
       - name: Get the output version
         run: echo "The time was ${{ steps.create.outputs.time }}"
