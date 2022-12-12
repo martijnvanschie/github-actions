@@ -14,7 +14,7 @@ jobs:
     name: Test the create-dotnet-versions locally
     steps:
       - name: Checkout
-        uses: actions/checkout@v3    
+        uses: actions/checkout@v3.2.0    
       - name: Create version step
         id: create-version
         uses: ./create-dotnet-versions
