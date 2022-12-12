@@ -60,9 +60,4 @@ runs:
       with:
         filepath: '${{ inputs.projectFile }}'
         xpath: '//Project/PropertyGroup/PackageVersion/text()'
-        replace: '${{ inputs.version-package }}'  
-
-    - name: Print project file
-      shell: bash
-      run: |
-        cat '${{ inputs.projectFile }}'
+        replace: '${{ inputs.version-package }}'
